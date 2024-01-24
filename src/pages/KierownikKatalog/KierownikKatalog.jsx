@@ -1,13 +1,26 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import { useNavigate } from "react-router-dom";
 import Product from "../utils/Product.jsx";
 import ShowProductModal from "./ShowProductModal.jsx";
 import AddingPositionModal from "./AddingPositionModal.jsx";
+import {getAllProducts} from "../api/api.js";
 
 const KierownikKatalog = () => {
   const navigate = useNavigate();
   const [openModalProduct, setOpenModalProduct] = useState(false);
   const [openAddModal, setOpenAddModal] = useState(false);
+  const [products, setProducts] = useState([]);
+  const [idProduct, setIdProduct] = useState(null);
+
+
+  async function updateProducts(){
+    const data = await getAllProducts();
+    setProducts(data.data);
+  }
+
+  useEffect(() => {
+    updateProducts().then((res) => setProducts(res.data));
+  },[])
 
   return (
     <div className="w-full h-full bg-white flex flex-col p-5">
@@ -28,50 +41,17 @@ const KierownikKatalog = () => {
         </button>
       </div>
       <div className="p-5 w-full h-full grid grid-cols-4 grid-rows-3 gap-20 ">
-        <Product
-          imageUrl="https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__480.jpg"
-          positionName={"Nazwa pozycji"}
-          positionPrice={"Cena pozycji"}
-          onClickFunc={() => setOpenModalProduct(true)}
-        />
-        <Product
-          imageUrl="https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__480.jpg"
-          positionName={"Nazwa pozycji"}
-          positionPrice={"Cena pozycji"}
-        />
-        <Product
-          imageUrl="https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__480.jpg"
-          positionName={"Nazwa pozycji"}
-          positionPrice={"Cena pozycji"}
-        />
-        <Product
-          imageUrl="https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__480.jpg"
-          positionName={"Nazwa pozycji"}
-          positionPrice={"Cena pozycji"}
-        />
-        <Product
-          imageUrl="https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__480.jpg"
-          positionName={"Nazwa pozycji"}
-          positionPrice={"Cena pozycji"}
-        />
-        <Product
-          imageUrl="https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__480.jpg"
-          positionName={"Nazwa pozycji"}
-          positionPrice={"Cena pozycji"}
-        />
-        <Product
-          imageUrl="https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__480.jpg"
-          positionName={"Nazwa pozycji"}
-          positionPrice={"Cena pozycji"}
-        />
-        <Product
-          imageUrl="https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__480.jpg"
-          positionName={"Nazwa pozycji"}
-          positionPrice={"Cena pozycji"}
-        />
+        {products.map((product) => (
+
+        <Product key={ product.id }
+          imageUrl={product.imageUrl}
+          positionName={product.name}
+          positionPrice={product.price}
+          onClickFunc={() => {setIdProduct(product.id); setOpenModalProduct(true); }}
+        />))}
       </div>
-        <ShowProductModal setOpenModal={setOpenModalProduct} openModal={openModalProduct}/>
-      <AddingPositionModal openModal={openAddModal} setOpenModal={setOpenAddModal}/>
+        <ShowProductModal setOpenModal={setOpenModalProduct} openModal={openModalProduct} idProduct={idProduct} updateProducts={updateProducts}/>
+      <AddingPositionModal openModal={openAddModal} setOpenModal={setOpenAddModal} updateProducts={updateProducts}/>
     </div>
   );
 };

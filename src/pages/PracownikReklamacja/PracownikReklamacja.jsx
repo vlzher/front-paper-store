@@ -1,11 +1,21 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {useNavigate} from "react-router-dom";
 import Reklamacja from "./Reklamacja.jsx";
+import {getAllComplaints} from "../api/api.js";
 
 const PracownikReklamacja = () => {
     const navigate = useNavigate();
+    const [reklamacje, setReklamacje] = useState([]);
+
+
+    useEffect(()=>{
+        getAllComplaints().then((response)=>{
+            setReklamacje(response.data);
+        })
+    },[])
+
     return (
-        <div className="w-full h-full bg-white flex flex-col p-5 items-center">
+        <div className="w-full h-full min-h-screen bg-white flex flex-col p-5 items-center">
             <div className="flex justify-between h-12 w-full mb-10 ">
                 <div className={'font-semibold text-3xl pl-5 pt-5 text-black flex items-center justify-center'}>Dostepne Reklamacje</div>
                 <button
@@ -16,13 +26,9 @@ const PracownikReklamacja = () => {
                     Powrót
                 </button>
             </div>
-            <Reklamacja nrReklamacji="Nr Reklamcji" opisReklamacji={"Opis Reklamacji"} statusReklamacji={"Status Reklamacji"}/>
-            <Reklamacja nrReklamacji="Nr Reklamcji" opisReklamacji={"Opis Reklamacji"} statusReklamacji={"Status Reklamacji"}/>
-            <Reklamacja nrReklamacji="Nr Reklamcji" opisReklamacji={"Opis Reklamacji"} statusReklamacji={"Status Reklamacji"}/>
-            <Reklamacja nrReklamacji="Nr Reklamcji" opisReklamacji={"Opis Reklamacji"} statusReklamacji={"Status Reklamacji"}/>
-            <Reklamacja nrReklamacji="Nr Reklamcji" opisReklamacji={"Opis Reklamacji"} statusReklamacji={"Status Reklamacji"}/>
-            <Reklamacja nrReklamacji="Nr Reklamcji" opisReklamacji={"Opis Reklamacji"} statusReklamacji={"Status Reklamacji"}/>
-
+            {reklamacje.map((reklamacja)=>
+                <Reklamacja key={reklamacja.complaintId} nrReklamacji={reklamacja.complaintId} opisReklamacji={reklamacja.complaintText} statusReklamacji={reklamacja.status}/>
+            )}
         </div>
 
     );

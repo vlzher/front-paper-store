@@ -1,8 +1,9 @@
 import { Button, Modal } from 'flowbite-react';
-import {useState} from "react";
+import React, {useState} from "react";
 import NotificationModal from "./NotificationModal.jsx";
+import {createProduct} from "../api/api.js";
 
-export default function AddingPositionModal({openModal, setOpenModal}) {
+export default function AddingPositionModal({openModal, setOpenModal, updateProducts}) {
     const [openNotificationModal, setOpenNotificationModal] = useState(false);
     const [selectedFile, setSelectedFile] = useState(null);
     const [name, setName] = useState("");
@@ -13,55 +14,31 @@ export default function AddingPositionModal({openModal, setOpenModal}) {
         setSelectedFile(file);
     };
 
-    const handleSubmit = (event) => {
-        event.preventDefault();
+
+
+
+    const handleSubmit = () => {
         const formData = new FormData();
         if (selectedFile) {
-            formData.append('file', selectedFile, selectedFile.name);
+            formData.append('picture', selectedFile);
         }
-        // Now you can send formData to the server using a fetch or axios
-
-        // Example using fetch:
-        /*
-        fetch('your-upload-endpoint', {
-          method: 'POST',
-          body: formData,
-        })
-        .then(response => response.json())
-        .then(data => {
-          // Handle the response from the server
-          console.log(data);
-        })
-        .catch(error => {
-          // Handle errors
-          console.error('Error uploading file:', error);
-        });
-        */
+        createProduct(name, description, price, formData).then(() => updateProducts());
+        setName("");
+        setPrice("");
+        setDescription("");
+        setSelectedFile(null);
     };
 
 
     return (
         <>
             <Modal show={openModal} onClose={() => setOpenModal(false)}>
-                <Modal.Header></Modal.Header>
+                <Modal.Header>Dodaj pozycję</Modal.Header>
                 <Modal.Body>
                     <div className="flex items-center justify-center w-full py-5">
-                        <label htmlFor="dropzone-file"
-                               className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
-                            <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                                <svg className="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
-                                     xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
-                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                          stroke-width="2"
-                                          d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/>
-                                </svg>
-                                <p className="mb-2 text-sm text-gray-500 dark:text-gray-400"><span
-                                    className="font-semibold">Click to upload</span> or drag and drop</p>
-                                <p className="text-xs text-gray-500 dark:text-gray-400">SVG, PNG, JPG or GIF (MAX.
-                                    800x400px)</p>
-                            </div>
-                            <input id="dropzone-file" type="file" onChange={handleFileChange} className="hidden"/>
-                        </label>
+                        <input
+                            className="block w-full mb-5 text-xs text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
+                            id="small_size" type="file" onChange={handleFileChange} />
                     </div>
                     <div className="mb-6">
                         <label htmlFor="default-input"
@@ -92,7 +69,7 @@ export default function AddingPositionModal({openModal, setOpenModal}) {
                 </Modal.Body>
                 <Modal.Footer>
                     <div className="w-full flex flex-row justify-end">
-                     <Button  onClick={() => {setOpenModal(false); setOpenNotificationModal(true)}}>Dodaj pozycje</Button>
+                     <Button  onClick={() => {setOpenModal(false); setOpenNotificationModal(true); handleSubmit()}}>Dodaj pozycje</Button>
                     </div>
                 </Modal.Footer>
             </Modal>

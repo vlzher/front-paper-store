@@ -9,7 +9,7 @@ const Product = ({ imageUrl, positionName, positionPrice, onClickFunc }) => {
                     {positionName}
                 </div>
                 <div className="text-xs text-black">
-                    {positionPrice}
+                    {positionPrice} zł
                 </div>
             </div>
         </div>

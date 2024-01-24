@@ -1,21 +1,37 @@
 import { Button, Modal } from "flowbite-react";
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import DeleteModal from "./DeleteModal.jsx";
 import NotificationModal from "./NotificationModal.jsx";
 import EditPositionModal from "./EditPositionModal.jsx";
+import {deleteProduct, getProductById} from "../api/api.js";
 
-function ShowProductModal({ openModal, setOpenModal }) {
+function ShowProductModal({ openModal, setOpenModal, idProduct, updateProducts }) {
     const [editProductModal, setEditProductModal] = useState(false);
     const [openDeleteModal, setOpenDeleteModal] = useState(false);
     const [openNotificationModal, setOpenNotificationModal] = useState(false);
+    const [positionName, setPositionName] = useState("");
+    const [positionPrice, setPositionPrice] = useState(0);
+    const [positionDescription, setPositionDescription] = useState("");
+    const [positionImage, setPositionImage] = useState("");
+    useEffect(() => {
+        getProductById(idProduct).then((res) => {
+            const data = res.data;
+            setPositionName(data.name);
+            setPositionPrice(data.price);
+            setPositionDescription(data.description);
+            setPositionImage(data.imageUrl)
+        });
+    },[openModal])
 
-  const url = "https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__480.jpg";
-  const positionName = "fdfdfddff";
-  const positionPrice = "10 zl";
-  const positionDescription = "dfffffffffffffffffdfffffffffffffffffffffdffffffffffffffffffffffffffffdffffffffffffffffffffffffffffdfffffffffffffffffffff";
-  function deleteProduct() {
-    setOpenModal(false);
-    setOpenNotificationModal(true);
+
+
+   function deleteProductHandler() {
+       deleteProduct(idProduct).then(() => {
+           setOpenModal(false);
+           setOpenDeleteModal(false);
+           setOpenNotificationModal(true);
+           updateProducts();
+       })
   }
   return (
     <>
@@ -31,13 +47,13 @@ function ShowProductModal({ openModal, setOpenModal }) {
         </Modal.Header>
         <Modal.Body>
             <div className="flex flex-col justify-center items-center">
-                <img className="rounded w-1/2 aspect-square" src={url} />
+                <img className="rounded w-1/2 aspect-square" src={positionImage} />
                 <div className="space-y-6 w-full p-5">
                     <p className="text-center text-wrap w-full text-base leading-relaxed text-gray-500 dark:text-gray-400">
                         {positionName}
                     </p>
                     <p className="text-center text-wrap text-base leading-relaxed text-gray-500 dark:text-gray-400">
-                        {positionPrice}
+                        {positionPrice} zł
                     </p>
                     <div style={{ wordWrap: 'break-word' }}>
                         <p className="h-24 text-base leading-relaxed text-gray-500 dark:text-gray-400">
@@ -60,9 +76,9 @@ function ShowProductModal({ openModal, setOpenModal }) {
           </div>
         </Modal.Footer>
       </Modal>
-        <DeleteModal openModal={openDeleteModal} setOpenModal={setOpenDeleteModal} deleteFunc={deleteProduct}/>
+        <DeleteModal openModal={openDeleteModal} setOpenModal={setOpenDeleteModal} deleteFunc={deleteProductHandler}/>
         <NotificationModal openModal={openNotificationModal} setOpenModal={setOpenNotificationModal} notificationText={"Pozycja została usunięta"} />
-        <EditPositionModal openModal={editProductModal} setOpenModal={setEditProductModal} />
+        <EditPositionModal productID={idProduct} updateProducts={updateProducts} openModal={editProductModal} setOpenModal={setEditProductModal} />
     </>
   );
 }

@@ -1,9 +1,17 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import Zamowienie from "./Zamowienie.jsx";
 import {useNavigate} from "react-router-dom";
+import {getAllOrders} from "../api/api.js";
 
 const KlientReklamacja = () => {
     const navigate = useNavigate();
+    const [orders, setOrders] = useState([]);
+
+    useEffect(() => {
+        getAllOrders().then((response) => {
+            setOrders(response.data);
+        })
+    }, [])
     return (
         <div className="w-full h-full bg-white flex flex-col items-center px-10 pt-10">
             <div className="flex justify-between h-12 w-full mb-10 ">
@@ -17,14 +25,11 @@ const KlientReklamacja = () => {
                 </button>
             </div>
             <div className={"w-3/4"}>
-                <Zamowienie status={"Odebrane"} nrZamowienia={"nr-zamowienia"} dataZamowienia={"data"} cenaZamowienia={"cena"} isReklamacja={true}/>
-                <Zamowienie status={"Odebrane"} nrZamowienia={"nr-zamowienia"} dataZamowienia={"data"} cenaZamowienia={"cena"} isReklamacja={false}/>
-                <Zamowienie status={"Odebrane"} nrZamowienia={"nr-zamowienia"} dataZamowienia={"data"} cenaZamowienia={"cena"} isReklamacja={true}/>
-                <Zamowienie status={"Odebrane"} nrZamowienia={"nr-zamowienia"} dataZamowienia={"data"} cenaZamowienia={"cena"} isReklamacja={true}/>
-                <Zamowienie status={"Odebrane"} nrZamowienia={"nr-zamowienia"} dataZamowienia={"data"} cenaZamowienia={"cena"} isReklamacja={true}/>
-                <Zamowienie status={"Odebrane"} nrZamowienia={"nr-zamowienia"} dataZamowienia={"data"} cenaZamowienia={"cena"} isReklamacja={true}/>
-                <Zamowienie status={"Odebrane"} nrZamowienia={"nr-zamowienia"} dataZamowienia={"data"} cenaZamowienia={"cena"} isReklamacja={true}/>
-
+                {orders.map((order) =>
+                    <Zamowienie key={order.id} status={order.status} nrZamowienia={order.orderId}
+                                dataZamowienia={`${order.orderDate[2]}.${order.orderDate[1]}.${order.orderDate[0]}`}
+                                cenaZamowienia={order.price} idReklamacji={order.complaintId} />
+                )}
             </div>
 
         </div>

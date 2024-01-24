@@ -1,9 +1,10 @@
 import { Button, Modal } from 'flowbite-react';
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import NotificationModal from "./NotificationModal.jsx";
+import {getProductById, updateProduct} from "../api/api.js";
 
-export default function EditPositionModal({openModal, setOpenModal}) {
-    const imageUrl = "https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__480.jpg"
+export default function EditPositionModal({openModal, setOpenModal, updateProducts, productID}) {
+    const [imageUrl, setImageUrl] = useState("");
     const [openNotificationModal, setOpenNotificationModal] = useState(false);
     const [selectedFile, setSelectedFile] = useState(null);
     const [name, setName] = useState("");
@@ -14,30 +15,30 @@ export default function EditPositionModal({openModal, setOpenModal}) {
         setSelectedFile(file);
     };
 
-    const handleSubmit = (event) => {
-        event.preventDefault();
+    useEffect(()=> {
+        getProductById(productID).then((res) => {
+            console.log(res.data)
+            const data = res.data;
+            setName(data.name);
+            setPrice(data.price);
+            setDescription(data.description);
+            setImageUrl(data.imageUrl)
+        });
+    },[openModal])
+
+    const handleSubmit = async () => {
         const formData = new FormData();
         if (selectedFile) {
-            formData.append('file', selectedFile, selectedFile.name);
+            formData.append('picture', selectedFile);
         }
-        // Now you can send formData to the server using a fetch or axios
-
-        // Example using fetch:
-        /*
-        fetch('your-upload-endpoint', {
-          method: 'POST',
-          body: formData,
-        })
-        .then(response => response.json())
-        .then(data => {
-          // Handle the response from the server
-          console.log(data);
-        })
-        .catch(error => {
-          // Handle errors
-          console.error('Error uploading file:', error);
-        });
-        */
+        else{
+            formData.append('picture', '');
+        }
+        updateProduct(productID, name, description, price, formData).then(() => updateProducts());
+        setName("");
+        setPrice("");
+        setDescription("");
+        setSelectedFile(null);
     };
 
 
@@ -81,7 +82,7 @@ export default function EditPositionModal({openModal, setOpenModal}) {
                 </Modal.Body>
                 <Modal.Footer>
                     <div className="w-full flex flex-row justify-end">
-                        <Button  onClick={() => {setOpenModal(false); setOpenNotificationModal(true)}}>Dodaj pozycje</Button>
+                        <Button  onClick={() => {setOpenModal(false); setOpenNotificationModal(true); handleSubmit()}}>Edytuj pozycje</Button>
                     </div>
                 </Modal.Footer>
             </Modal>
