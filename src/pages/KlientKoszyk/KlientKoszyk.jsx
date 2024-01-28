@@ -55,7 +55,7 @@ const KlientKoszyk = () => {
   return (
     <div className="w-full min-h-screen bg-white flex flex-col items-center px-10 pt-10">
       <div className="w-full flex justify-around mb-5">
-        <Button onClick={() => navigate("/")}>Back</Button>
+        <Button onClick={() => navigate("/")}>Powrót</Button>
         <form className={"w-1/2"}>
           <label
             htmlFor="default-search"

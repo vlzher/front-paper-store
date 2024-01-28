@@ -57,7 +57,7 @@ const CreateReklamacja = () => {
                 </label>
                 <input type="text" id="large-input" onChange={(e) => setDescription(e.target.value)}
                        className="block w-1/2 p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-md focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"/>
-                <div className="mt-10 w-32"><Button onClick={() => {handleButtonClick()}}>Dodaj zdjęcie</Button></div>
+                <div className="mt-10 w-32"><Button onClick={() => {handleButtonClick()}}>{selectedFile ? "Dodane ✔" : "Dodaj zdjęcie"}</Button></div>
                 <input
                     type="file"
                     ref={fileInputRef}

@@ -3,6 +3,7 @@ import {Button} from "flowbite-react";
 import Message from "./Message.jsx";
 import {useNavigate} from "react-router-dom";
 import {getChatMessages, getComplaintById, manageComplaint, sendMessageToWorker} from "../api/api.js";
+import {statusToColor, statusToText} from "./utils.js";
 
 const ReklamacjaScreen = ({isPracownik}) => {
     const fileInputRef = useRef(null);
@@ -74,7 +75,7 @@ const ReklamacjaScreen = ({isPracownik}) => {
         <div className="flex justify-between px-10 min-h-screen w-full bg-white">
             <div className="w-1/2 flex flex-col h-full pl-5 pt-16 items-start h-screen">
                 <div className="my-10">
-                    <Button onClick={()=> navigateFunction()}>Powrot</Button>
+                    <Button onClick={()=> navigateFunction()}>Powrót</Button>
                 </div>
                 <label htmlFor="default-input"
                        className="block mb-2 text-lg font-medium text-gray-900 dark:text-white">Nr Zamowienia
@@ -91,8 +92,8 @@ const ReklamacjaScreen = ({isPracownik}) => {
                 <label htmlFor="default-input"
                        className="block mb-2 text-lg font-medium text-gray-900 dark:text-white">Status
                 </label>
-                <h3 className="mb-5 text-base font-normal text-gray-500 dark:text-gray-400">
-                    {status.toLowerCase()}
+                <h3 className={`mb-5 text-base font-normal text-gray-500 dark:text-gray-400 ${statusToColor(status)}`}>
+                    {statusToText(status)}
                 </h3>
                 <label htmlFor="default-input"
                        className="block mb-2 text-lg font-medium text-gray-900 dark:text-white">Opis
@@ -132,7 +133,7 @@ const ReklamacjaScreen = ({isPracownik}) => {
                                    text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block
                                     w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400
                                      dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"/>
-                            <Button onClick={() => {handleButtonClick()}}>{selectedFile ? "ok" : "photo"}</Button>
+                            <Button onClick={() => {handleButtonClick()}}>{selectedFile ? "ok" : "zdjęcie"}</Button>
                             <div className={"w-2"}></div>
                             <input
                                 type="file"
@@ -140,7 +141,7 @@ const ReklamacjaScreen = ({isPracownik}) => {
                                 style={{ display: 'none' }}
                                 onChange={handleFileChange}
                             />
-                            <Button onClick={sendMessage}>send</Button>
+                            <Button onClick={sendMessage}>wyślij</Button>
 
                         </div>
 

@@ -82,7 +82,7 @@ export default function EditPositionModal({openModal, setOpenModal, updateProduc
                 </Modal.Body>
                 <Modal.Footer>
                     <div className="w-full flex flex-row justify-end">
-                        <Button  onClick={() => {setOpenModal(false); setOpenNotificationModal(true); handleSubmit()}}>Edytuj pozycje</Button>
+                        <Button  onClick={() => {setOpenModal(false); setOpenNotificationModal(true); handleSubmit()}}>Edytuj pozycję</Button>
                     </div>
                 </Modal.Footer>
             </Modal>

@@ -82,7 +82,7 @@ const Koszyk = () => {
                 <div className={"text-black text-2xl mb-10"}>PODSUMOWANIE</div>
                 <div className={"flex justify-between items-center"}>
                     <div className={"text-md text-black"}>Wartosc koszyka</div>
-                    <div className={"text-md text-black"}>{priceOverall} zl</div>
+                    <div className={"text-md text-black"}>{priceOverall.toFixed(2)} zl</div>
                 </div>
                 <div className={"flex justify-between items-center"}>
                     <div className={"text-md text-black"}>Dostawa</div>
