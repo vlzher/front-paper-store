@@ -7,7 +7,10 @@ const api = axios.create({
 });
 
 // Products API
-export const getProductById = (productId) => api.get(`/products/${productId}`);
+export const getProductById = (productId) =>
+{
+    if(!productId) return new Promise((resolve, reject) => resolve(""));
+   return api.get(`/products/${productId}`)};
 export const updateProduct = (
   productId,
   name,

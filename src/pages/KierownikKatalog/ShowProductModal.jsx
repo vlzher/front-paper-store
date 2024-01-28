@@ -15,6 +15,7 @@ function ShowProductModal({ openModal, setOpenModal, idProduct, updateProducts }
     const [positionImage, setPositionImage] = useState("");
     useEffect(() => {
         getProductById(idProduct).then((res) => {
+            if(!res) return;
             const data = res.data;
             setPositionName(data.name);
             setPositionPrice(data.price);
